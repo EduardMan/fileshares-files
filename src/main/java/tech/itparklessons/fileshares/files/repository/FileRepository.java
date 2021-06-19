@@ -12,4 +12,6 @@ public interface FileRepository extends JpaRepository<FilesharesFilesFile, UUID>
     List<FilesharesFilesFile> findAllByOwnerId(Long ownerId);
 
     FilesharesFilesFile findByUuid(UUID fileUUID);
+
+    List<FilesharesFilesFile> findByUuidIn(List<UUID> fileUUID);
 }

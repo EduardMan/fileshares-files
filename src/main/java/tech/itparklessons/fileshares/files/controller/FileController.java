@@ -53,4 +53,10 @@ public class FileController {
                         @AuthenticationPrincipal User user) {
         return fileService.getFile(shareLink, user);
     }
+
+    @PostMapping("/delete-file")
+    public void deleteFile(@RequestParam List<UUID> fileUUID,
+                           @AuthenticationPrincipal User user) {
+        fileService.deleteFile(fileUUID, user);
+    }
 }

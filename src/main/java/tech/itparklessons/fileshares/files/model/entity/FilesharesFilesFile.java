@@ -22,7 +22,10 @@ public class FilesharesFilesFile {
     private String path;
 
     @Column(nullable = false)
-    private String name;
+    private String fileName;
+
+    @Column(nullable = false)
+    private String originalName;
 
     private String extension;
 
@@ -31,4 +34,6 @@ public class FilesharesFilesFile {
 
     @Column(nullable = false)
     private Long ownerId;
+
+    private boolean deleted;
 }

@@ -1,6 +1,8 @@
 package tech.itparklessons.fileshares.files.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -29,18 +32,23 @@ public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
     private final SocialClient socialClient;
+    private final RabbitTemplate template;
 
     @Override
     public UUID upload(MultipartFile multipartFile, User user) throws IOException {
-        String fullFileName = getFullStoragePath() + multipartFile.getOriginalFilename();
+        String fileName = RandomStringUtils.random(15, true, true);
+        String extension = getExtension(multipartFile.getOriginalFilename());
+
+        String fullFileName = getFullStoragePath() + fileName + "." + extension;
 
         multipartFile.transferTo(Path.of(fullFileName));
 
         FilesharesFilesFile filesharesFilesFile = new FilesharesFilesFile();
-        filesharesFilesFile.setName(multipartFile.getOriginalFilename());
-        filesharesFilesFile.setPath(fullFileName);
+        filesharesFilesFile.setOriginalName(multipartFile.getOriginalFilename());
+        filesharesFilesFile.setFileName(fileName);
+        filesharesFilesFile.setPath(getFullStoragePath());
         filesharesFilesFile.setOwnerId(user.getId());
-        filesharesFilesFile.setExtension(getExtension(multipartFile.getOriginalFilename()));
+        filesharesFilesFile.setExtension(extension);
         filesharesFilesFile.setSize(multipartFile.getSize());
         FilesharesFilesFile save = fileRepository.save(filesharesFilesFile);
 
@@ -106,5 +114,26 @@ public class FileServiceImpl implements FileService {
         }
 
         return null;
+    }
+
+    @Override
+    public void deleteFile(List<UUID> fileUUID, User user) {
+        List<FilesharesFilesFile> filesharesFilesFiles = fileRepository.findByUuidIn(fileUUID);
+        boolean isAnyNotOwnedFile = filesharesFilesFiles.stream().anyMatch(filesharesFilesFile -> !filesharesFilesFile.getOwnerId().equals(user.getId()));
+        if (isAnyNotOwnedFile) {
+            return;
+        }
+
+        List<UUID> uuidsForDelete = new ArrayList<>();
+        for (FilesharesFilesFile filesharesFilesFile : filesharesFilesFiles) {
+            filesharesFilesFile.setDeleted(true);
+
+            File file = new File(filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + "." + filesharesFilesFile.getExtension());
+            if (file.delete()) {
+                uuidsForDelete.add(filesharesFilesFile.getUuid());
+            }
+        }
+        fileRepository.saveAll(filesharesFilesFiles);
+        template.convertAndSend("fileshares", "files-deleted-queue", uuidsForDelete);
     }
 }

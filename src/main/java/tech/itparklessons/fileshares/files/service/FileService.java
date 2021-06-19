@@ -21,4 +21,6 @@ public interface FileService {
     File getFile(UUID fileUUID, User user);
 
     File getFile(String shareLink, User user);
+
+    void deleteFile(List<UUID> fileUUID, User user);
 }
