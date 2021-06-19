@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6870/fileshares_files
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8083
