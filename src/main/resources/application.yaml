@@ -1,3 +1,6 @@
+application:
+    storage-path: home/fileshares-files/files
+
 spring:
   datasource:
     url: jdbc:postgresql://fileshares-files-db:5432/fileshares_files
