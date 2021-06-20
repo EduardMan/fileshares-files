@@ -3,5 +3,6 @@ WORKDIR /app
 COPY . .
 RUN mvn -B package
 
-FROM tomcat:10-jdk16-openjdk-slim
-COPY --from=build /app/target/fileshares-files-1.0.war $CATALINA_HOME/webapps/ROOT.war
+FROM openjdk:16-slim
+COPY --from=build /app/target/fileshares-files-1.0.jar app.jar
+CMD ["java", "-jar", "app.jar"]
