@@ -1,5 +1,5 @@
 application:
-    storage-path: home/fileshares-files/files
+    storage-path: /home/fileshares-files/files
 
 spring:
   datasource:
