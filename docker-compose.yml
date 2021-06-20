@@ -1,11 +1,11 @@
 version: '3.7'
 services:
-  fileshare-account-service:
+  fileshares-files-service:
     image: ghcr.io/eduardman/fileshares-files:latest
     build: .
     depends_on:
       - fileshares-files-db
-  filesharse-files-db:
+  filesharses-files-db:
     image: postgres
     environment:
       - POSTGRES_DB=fileshares_files
