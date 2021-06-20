@@ -4,4 +4,4 @@ COPY . .
 RUN mvn -B package
 
 FROM tomcat:10-jdk16-openjdk-slim
-COPY --from=build /app/target/fileshares-account-1.0.war $CATALINA_HOME/webapps/ROOT.war
+COPY --from=build /app/target/fileshares-files-1.0.war $CATALINA_HOME/webapps/ROOT.war
