@@ -96,8 +96,8 @@ public class FileServiceImpl implements FileService {
         boolean isAccessible = socialClient.checkAccess(fileUUID);
         if (isAccessible) {
             FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(fileUUID);
-            String path = filesharesFilesFile.getPath();
-            return new File(path);
+            String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + filesharesFilesFile.getExtension();
+            return new File(fullFileName);
         }
 
         throw new RuntimeException("");
@@ -109,8 +109,8 @@ public class FileServiceImpl implements FileService {
 
         if (filesharesSocialFile != null) {
             FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(filesharesSocialFile.getFilesServiceFileUUID());
-            String path = filesharesFilesFile.getPath();
-            return new File(path);
+            String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + filesharesFilesFile.getExtension();
+            return new File(fullFileName);
         }
 
         return null;
@@ -134,6 +134,7 @@ public class FileServiceImpl implements FileService {
             }
         }
         fileRepository.saveAll(filesharesFilesFiles);
-        template.convertAndSend("fileshares", "files-deleted-queue", uuidsForDelete);
+        template.convertAndSend("fileshares", "files-deleted-social-queue", uuidsForDelete);
+        template.convertAndSend("fileshares", "files-deleted-archiver-queue", uuidsForDelete);
     }
 }
