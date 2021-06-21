@@ -97,9 +97,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public File getFile(UUID fileUUID, User user) {
-        boolean isAccessible = socialClient.checkAccess(fileUUID);
-        if (isAccessible) {
-            FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(fileUUID);
+        FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(fileUUID);
+
+        if (filesharesFilesFile.getOwnerId().equals(user.getId()) || socialClient.checkAccess(fileUUID)) {
             String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + filesharesFilesFile.getExtension();
             return new File(fullFileName);
         }
