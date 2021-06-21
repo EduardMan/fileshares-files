@@ -1,7 +1,6 @@
 package tech.itparklessons.fileshares.files.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,32 +13,21 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/api/file-storage")
+@RequestMapping("/api/files")
 @RequiredArgsConstructor
 @RestController
 public class FileController {
     private final FileService fileService;
 
-    @PostMapping("/upload")
-    public UUID uploadFile(@RequestParam("file") MultipartFile multipartFile,
-                           @AuthenticationPrincipal User user) throws IOException {
-        return fileService.upload(multipartFile, user);
-    }
-
-    @GetMapping("/files")
+    @GetMapping
     public List<FilesharesFilesFile> getAllOwnerFiles(@AuthenticationPrincipal User user) {
         return fileService.getAllOwnerFiles(user.getId());
     }
 
-    @GetMapping("/checkOwner")
-    public boolean checkOwner(@RequestParam List<UUID> fileUUID, @RequestParam Long userId) {
-        return fileService.checkOwner(fileUUID, userId);
-    }
-
-    @Secured("ROLE_BACK")
-    @GetMapping("/internal/getFile")
-    public File getFile(@RequestParam UUID fileUUID) {
-        return fileService.getFile(fileUUID);
+    @PostMapping("/upload")
+    public UUID uploadFile(@RequestParam("file") MultipartFile multipartFile,
+                           @AuthenticationPrincipal User user) throws IOException {
+        return fileService.upload(multipartFile, user);
     }
 
     @GetMapping("/getFile")
@@ -48,7 +36,7 @@ public class FileController {
         return fileService.getFile(fileUUID, user);
     }
 
-    @GetMapping("/getFile-by-share-link")
+    @GetMapping("/getFileByShareLink")
     public File getFile(@RequestParam String shareLink,
                         @AuthenticationPrincipal User user) {
         return fileService.getFile(shareLink, user);
