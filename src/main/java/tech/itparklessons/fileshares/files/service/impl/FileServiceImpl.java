@@ -1,5 +1,6 @@
 package tech.itparklessons.fileshares.files.service.impl;
 
+import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -19,9 +20,7 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,12 +95,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File getFile(UUID fileUUID, User user) {
+    public Pair<String, File> getFile(UUID fileUUID, User user) {
         FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(fileUUID);
 
         if (filesharesFilesFile.getOwnerId().equals(user.getId()) || socialClient.checkAccess(fileUUID)) {
-            String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + filesharesFilesFile.getExtension();
-            return new File(fullFileName);
+            String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + "." + filesharesFilesFile.getExtension();
+            return new Pair<>(filesharesFilesFile.getOriginalName(), new File(fullFileName));
         }
 
         throw new RuntimeException("");

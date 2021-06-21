@@ -1,5 +1,6 @@
 package tech.itparklessons.fileshares.files.service;
 
+import kotlin.Pair;
 import org.springframework.web.multipart.MultipartFile;
 import tech.itparklessons.fileshares.files.model.User;
 import tech.itparklessons.fileshares.files.model.entity.FilesharesFilesFile;
@@ -18,7 +19,7 @@ public interface FileService {
 
     File getFile(UUID fileUUID);
 
-    File getFile(UUID fileUUID, User user);
+    Pair<String, File> getFile(UUID fileUUID, User user);
 
     File getFile(String shareLink, User user);
 
