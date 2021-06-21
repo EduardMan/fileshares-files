@@ -3,7 +3,8 @@ application:
 
 spring:
   datasource:
-    url: jdbc:postgresql://fileshares-files-db:5432/fileshares_files
+#    url: jdbc:postgresql://fileshares-files-db:5432/fileshares_files
+    url: jdbc:postgresql://localhost:6870/fileshares_files
     username: postgres
     password: password
   jpa:

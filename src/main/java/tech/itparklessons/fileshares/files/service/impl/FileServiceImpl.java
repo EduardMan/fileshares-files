@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -40,6 +41,8 @@ public class FileServiceImpl implements FileService {
         String extension = getExtension(multipartFile.getOriginalFilename());
 
         String fullFileName = getFullStoragePath() + fileName + "." + extension;
+        File file = new File(getFullStoragePath());
+        file.mkdirs();
 
         multipartFile.transferTo(Path.of(fullFileName));
 
@@ -67,8 +70,9 @@ public class FileServiceImpl implements FileService {
     private String getExtension(String fileName) {
         Pattern pattern = Pattern.compile("(\\.[^.]*)$", Pattern.CASE_INSENSITIVE);
 
-        if (pattern.matcher(fileName).find()) {
-            return pattern.matcher(fileName).group(0).substring(1);
+        Matcher matcher = pattern.matcher(fileName);
+        if (matcher.find()) {
+            return matcher.group(0).substring(1);
         }
 
         return null;
