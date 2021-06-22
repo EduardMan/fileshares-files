@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface FileRepository extends JpaRepository<FilesharesFilesFile, UUID> {
     boolean existsByOwnerIdAndUuidIn(Long ownerId, List<UUID> fileUUID);
 
-    List<FilesharesFilesFile> findAllByOwnerId(Long ownerId);
+    List<FilesharesFilesFile> findAllByOwnerIdAndDeletedFalse(Long ownerId);
 
     FilesharesFilesFile findByUuid(UUID fileUUID);
 

@@ -84,7 +84,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<FilesharesFilesFile> getAllOwnerFiles(Long userId) {
-        return fileRepository.findAllByOwnerId(userId);
+        return fileRepository.findAllByOwnerIdAndDeletedFalse(userId);
     }
 
     @Override
