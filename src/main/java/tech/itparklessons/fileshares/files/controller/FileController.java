@@ -2,7 +2,6 @@ package tech.itparklessons.fileshares.files.controller;
 
 import kotlin.Pair;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/api/files")
@@ -58,7 +56,7 @@ public class FileController {
         return fileService.getFile(shareLink, user);
     }
 
-    @PostMapping("/delete-file")
+    @PostMapping("/deleteFile")
     public void deleteFile(@RequestParam List<UUID> fileUUID,
                            @AuthenticationPrincipal User user) {
         fileService.deleteFile(fileUUID, user);
