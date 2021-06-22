@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
-@Secured("ROLE_BACKEND")
 @RequestMapping("/internal/files")
 @RequiredArgsConstructor
 @RestController
