@@ -12,6 +12,6 @@ public interface SocialClient {
     @GetMapping("/checkAccess")
     boolean checkAccess(@RequestParam UUID fileUUID);
 
-    @GetMapping("/internal/getByShareLink")
+    @GetMapping("/getByShareLink")
     FilesharesSocialFile getFilesharesSocialFile(@RequestParam String shareLink);
 }
