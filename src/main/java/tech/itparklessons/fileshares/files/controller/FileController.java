@@ -16,6 +16,7 @@ import tech.itparklessons.fileshares.files.service.FileService;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -51,9 +52,15 @@ public class FileController {
     }
 
     @GetMapping("/getFileByShareLink")
-    public File getFile(@RequestParam String shareLink,
-                        @AuthenticationPrincipal User user) {
-        return fileService.getFile(shareLink, user);
+    public ResponseEntity<Resource> getFile(@RequestParam String shareLink,
+                        @AuthenticationPrincipal User user) throws FileNotFoundException {
+        Pair<String, File> fileServiceFile = fileService.getFile(shareLink, user);
+        InputStreamResource inputStreamResource = new InputStreamResource(new FileInputStream(fileServiceFile.component2()));
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileServiceFile.component1() + "\"")
+                .body(inputStreamResource);
     }
 
     @PostMapping("/deleteFile")

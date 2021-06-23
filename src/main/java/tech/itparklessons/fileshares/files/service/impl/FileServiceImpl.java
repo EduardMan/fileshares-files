@@ -107,13 +107,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File getFile(String shareLink, User user) {
+    public Pair<String, File> getFile(String shareLink, User user) {
         FilesharesSocialFile filesharesSocialFile = socialClient.getFilesharesSocialFile(shareLink);
 
         if (filesharesSocialFile != null) {
             FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(filesharesSocialFile.getFilesServiceFileUUID());
-            String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + filesharesFilesFile.getExtension();
-            return new File(fullFileName);
+            String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + "." + filesharesFilesFile.getExtension();
+            return new Pair<>(filesharesFilesFile.getOriginalName(), new File(fullFileName));
         }
 
         return null;
