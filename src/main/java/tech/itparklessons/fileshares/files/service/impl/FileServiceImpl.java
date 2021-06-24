@@ -140,7 +140,7 @@ public class FileServiceImpl implements FileService {
             }
         }
         fileRepository.saveAll(filesharesFilesFiles);
-        template.convertAndSend("fileshares", "files-deleted-social-queue", uuidsForDelete);
-        template.convertAndSend("fileshares", "files-deleted-archiver-queue", uuidsForDelete);
+        template.convertAndSend("", "files-deleted-social-queue", uuidsForDelete);
+        template.convertAndSend("", "files-deleted-archiver-queue", uuidsForDelete);
     }
 }
