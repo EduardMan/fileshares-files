@@ -20,7 +20,9 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,10 +90,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File getFile(UUID fileUUID) {
+    public Pair<String, File> getFile(UUID fileUUID) {
         FilesharesFilesFile filesharesFilesFile = fileRepository.findByUuid(fileUUID);
-        String path = filesharesFilesFile.getPath();
-        return new File(path);
+
+        String fullFileName = filesharesFilesFile.getPath() + filesharesFilesFile.getFileName() + "." + filesharesFilesFile.getExtension();
+        return new Pair<>(filesharesFilesFile.getOriginalName(), new File(fullFileName));
     }
 
     @Override

@@ -17,7 +17,7 @@ public interface FileService {
 
     List<FilesharesFilesFile> getAllOwnerFiles(Long userId);
 
-    File getFile(UUID fileUUID);
+    Pair<String, File> getFile(UUID fileUUID);
 
     Pair<String, File> getFile(UUID fileUUID, User user);
 

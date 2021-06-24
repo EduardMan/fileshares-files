@@ -53,7 +53,7 @@ public class FileController {
 
     @GetMapping("/getFileByShareLink")
     public ResponseEntity<Resource> getFile(@RequestParam String shareLink,
-                        @AuthenticationPrincipal User user) throws FileNotFoundException {
+                                            @AuthenticationPrincipal User user) throws FileNotFoundException {
         Pair<String, File> fileServiceFile = fileService.getFile(shareLink, user);
         InputStreamResource inputStreamResource = new InputStreamResource(new FileInputStream(fileServiceFile.component2()));
 
